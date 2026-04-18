@@ -1,0 +1,28 @@
+# prometheus.yml — Prometheus configuration for the SCA Monitoring Lab
+# Prometheus scrapes (pulls) metrics from targets at regular intervals.
+
+global:
+  scrape_interval: 15s        # How often to pull metrics from targets
+  evaluation_interval: 15s    # How often to evaluate alerting rules
+
+scrape_configs:
+  # ── Job 1: Prometheus monitors itself ──────────────────────
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+        labels:
+          app: "prometheus"
+
+  # ── Job 2: pay-api system metrics (Node Exporter) ──────────
+  - job_name: "pay-api-system"
+    static_configs:
+      - targets: ["node-exporter:9100"]
+        labels:
+          app: "pay-api-system"
+
+  # ── Job 3: pay-api application metrics ─────────────────────
+  - job_name: "pay-api-app"
+    static_configs:
+      - targets: ["pay-api:5000"]
+        labels:
+          app: "pay-api-app"
